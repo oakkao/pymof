@@ -81,6 +81,6 @@ c.visualize()
 ```
 [0.34541068 0.11101711 0.07193073 0.07520904 1.51480377 0.94558894 0.27585581 0.06242823 0.2204504  0.02247725]
 ```
-![](https://github.com/oakkao/pymof/blob/main/example.png?raw=true)
+![](https://github.com/oakkao/pymof/examples/example.png?raw=true)
 
  

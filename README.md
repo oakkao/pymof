@@ -3,8 +3,9 @@
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Documents are editted.
-2. The package operates on fixed datasets containing fewer than 1000 data points.
+1. Documents are editted. 2D and 3D examples are added.
+2. Suggest the package library before importing.
+3. The package operates on fixed datasets containing fewer than 1000 data points.
 
 ### Introduction
 

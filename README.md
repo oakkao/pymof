@@ -35,6 +35,14 @@ pip install pymof            # normal install
 pip install --upgrade pymof  # or update if needed
 ```
 
+### Use on jupyter notebook
+
+To make sure that the installed package can be called. A user must include the package path before import as
+```
+import sys
+sys.path.append('/path/to/lib/python3.xx/site-packages')
+```
+
 **Required Dependencies** :
 - Python 3.9 or higher
 - numpy>=1.23

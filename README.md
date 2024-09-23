@@ -92,25 +92,62 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 
 ### Sample usage
 ```
+# This example is from MOF paper.
+import matplotlib.pyplot as plt
+data = np.array([[0.0, 1.0], [1.0, 1.0], [2.0, 1.0], [3.0, 1.0],
+                 [0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0],
+                 [0.0,-1.0], [1.0,-1.0], [2.0,-1.0], [3.0,-1.0], [8.0, 4.0]
+                ])
+model = MOF()
+model.fit(X)
+scores = model.decision_scores_
+print(scores)
+model.visualize()
+
+# Create a figure and axes
+fig, ax = plt.subplots()
+data = model.MassRatio
+# Iterate over each row and create a boxplot
+for i in range(data.shape[0]):
+    row = data[i, :]
+    mask = np.isnan(row)
+    ax.boxplot(row[~mask], positions=[i + 1], vert=False, widths=0.5)
+# Set labels and title
+ax.set_xlabel("MOF")
+ax.set_ylabel("Data points")
+ax.set_title("Boxplot of MassRatio distribution")
+# Show the plot
+plt.grid(True)
+plt.show()
+```
+**Output**
+```
+[0.12844997, 0.06254347, 0.08142683, 0.20940997, 0.03981233, 0.0212412 , 0.025438  , 0.08894882, 0.11300615, 0.0500218, 0.05805704, 0.17226989, 2.46193377]
+```
+![MOF score](https://github.com/oakkao/pymof/blob/main/examples/mofOriginal.png?raw=true)
+![Box plot of MassRatio distribution](https://github.com/oakkao/pymof/blob/main/examples/mofBoxplot.png?raw=true)
+
+
+### 3D sample
+```
 # This example demonstrates  the usage of MOF
 from pymof import MOF
 import numpy as np
-X = [[-2.30258509,  7.01040212,  5.80242044],
-    [ 0.09531018,  7.13894636,  5.91106761],
-    [ 0.09531018,  7.61928251,  5.80242044],
-    [ 0.09531018,  7.29580291,  6.01640103],
-    [-2.30258509, 12.43197678,  5.79331844],
-    [ 1.13140211,  9.53156118,  7.22336862],
-    [-2.30258509,  7.09431783,  5.79939564],
-    [ 0.09531018,  7.50444662,  5.82037962],
-    [ 0.09531018,  7.8184705,   5.82334171],
-    [ 0.09531018,  7.25212482,  5.91106761]]
-X = np.array(X)
-c = MOF()
-c.fit(X)
-scores = c.decision_scores_
+data = np.array([[-2.30258509,  7.01040212,  5.80242044],
+                 [ 0.09531018,  7.13894636,  5.91106761],
+                 [ 0.09531018,  7.61928251,  5.80242044],
+                 [ 0.09531018,  7.29580291,  6.01640103],
+                 [-2.30258509, 12.43197678,  5.79331844],
+                 [ 1.13140211,  9.53156118,  7.22336862],
+                 [-2.30258509,  7.09431783,  5.79939564],
+                 [ 0.09531018,  7.50444662,  5.82037962],
+                 [ 0.09531018,  7.8184705,   5.82334171],
+                 [ 0.09531018,  7.25212482,  5.91106761]])
+model = MOF()
+model.fit(data)
+scores = model.decision_scores_
 print(scores)
-c.visualize()
+model.visualize()
 ```
 **Output**
 ```

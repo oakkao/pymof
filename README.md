@@ -4,7 +4,7 @@
 
 ### Latest news
 1. Documents are editted.
-2. Works with a static dataset of size below 1000 data points.
+2. The package operates on fixed datasets containing fewer than 1000 data points.
 
 ### Introduction
 
@@ -49,7 +49,7 @@ pip install --upgrade pymof  # or update if needed
 
 The outlier score of each data point is calculated using the Mass-ratio-variance based Outlier Factor (MOF). MOF quantifies the global deviation of a data point's density relative to the rest of the dataset. This global perspective is crucial because an outlier's score depends on its overall isolation from all other data points. By analyzing the variance of the mass ratio, MOF can effectively identify data points with significantly lower density compared to their neighbors, indicating their outlier status.
 
-#### MOF() object
+#### MOF() 
 
 > Initialize a model object `MOF`
 
@@ -78,8 +78,8 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 #### MOF attributes
 | Attributes | Type | Details |
 | ------ | ------- | ------ |
-| MOF.Data | numpy array of shape (n_points, d_dimensions) | input data for model |
-| MOF.MassRatio | numpy array of shape (n_samples, n_points) | MassRatio for each a pair of points |
+| MOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
+| MOF.MassRatio | numpy array of shape (n_samples, n_points) | MassRatio for each pair of data points |
 | MOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
 
 ### Sample usage

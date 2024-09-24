@@ -104,7 +104,7 @@ data = np.array([[0.0, 1.0], [1.0, 1.0], [2.0, 1.0], [3.0, 1.0],
                  [0.0,-1.0], [1.0,-1.0], [2.0,-1.0], [3.0,-1.0], [8.0, 4.0]
                 ])
 model = MOF()
-model.fit(X)
+model.fit(data)
 scores = model.decision_scores_
 print(scores)
 model.visualize()

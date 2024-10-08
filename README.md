@@ -30,6 +30,17 @@ BibTex for the package:
   year={2021},
   organization={IEEE}
 }
+@INPROCEEDINGS{10613697,
+  author={Fan, Zehong and Luangsodsai, Arthorn and Sinapiromsaran, Krung},
+  booktitle={2024 21st International Joint Conference on Computer Science and Software Engineering (JCSSE)}, 
+  title={Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor for Anomaly Scoring}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={488-493},
+  keywords={Industries;Software algorithms;Process control;Quality control;Nearest neighbor methods;Fraud;Computer security;Anomaly scoring;Statistical dispersion;Mass-ratio distribution;Local outlier factor;Mass-ratio variance outlier factor},
+  doi={10.1109/JCSSE61278.2024.10613697}}
+
 ```
 
 ## Installation
@@ -60,6 +71,7 @@ sys.path.append('/path/to/lib/python3.xx/site-packages')
 ## Documentation
 ----
 
+### Mass-ratio-variance based Outlier Factor (MOF)
 The outlier score of each data point is calculated using the Mass-ratio-variance based Outlier Factor (MOF). MOF quantifies the global deviation of a data point's density relative to the rest of the dataset. This global perspective is crucial because an outlier's score depends on its overall isolation from all other data points. By analyzing the variance of the mass ratio, MOF can effectively identify data points with significantly lower density compared to their neighbors, indicating their outlier status.
 
 #### MOF() 
@@ -70,13 +82,15 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
     Return :
             self : object
                     object of MOF model
-#### MOF.fit(Data)
-> Fit data to  `MOF` model\
-> **Note** The number of data points should not exceed **10000** due to the computation of all pair distances.
+#### MOF.fit(Data, Window = 10000)
+> Fit data to  `MOF` model
 
     Parameters :
             Data  : numpy array of shape (n_points, d_dimensions)
                     The input samples.
+            Window : integer (int)
+                    window size for calculation.
+                    default window size is 10000.
     Return :
             self  : object
                     fitted estimator
@@ -92,7 +106,6 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 | Attributes | Type | Details |
 | ------ | ------- | ------ |
 | MOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
-| MOF.MassRatio | numpy array of shape (n_samples, n_points) | MassRatio for each pair of data points |
 | MOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
 
 ### Sample usage
@@ -159,3 +172,62 @@ model.visualize()
 [0.34541068 0.11101711 0.07193073 0.07520904 1.51480377 0.94558894 0.27585581 0.06242823 0.2204504  0.02247725]
 ```
 ![](https://github.com/oakkao/pymof/blob/main/examples/example.png?raw=true)
+
+------
+### Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor (MAOF)
+This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical  
+dispersion beyond the traditional variance such as range, interquartile range, and average absolute deviation.
+#### MAOF() 
+> Initialize a model object `MAOF`
+
+    Parameters :
+    Return :
+            self : object
+                    object of MAOF model
+#### MAOF.fit(Data, Window = 10000, Function_name = "AAD")
+> Fit data to  `MAOF` model
+
+    Parameters :
+            Data  : numpy array of shape (n_points, d_dimensions)
+                    The input samples.
+            Window  : integer (int)
+                    number of points for each calculation.
+                    default window size is 10000.
+            Function_name  : string (str)
+                    A type of statistical dispersion that use for scoring.
+                    Function_name can be 'AAD','IQR', 'Range'.
+                    default function is 'AAD'
+    Return :
+            self  : object
+                    fitted estimator
+
+#### MAOF attributes
+| Attributes | Type | Details |
+| ------ | ------- | ------ |
+| MAOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
+| MAOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
+
+### Sample usage
+```
+# This example demonstrates  the usage of MAOF
+from pymof import MAOF
+import numpy as np
+data = np.array([[-2.30258509,  7.01040212,  5.80242044],
+                 [ 0.09531018,  7.13894636,  5.91106761],
+                 [ 0.09531018,  7.61928251,  5.80242044],
+                 [ 0.09531018,  7.29580291,  6.01640103],
+                 [-2.30258509, 12.43197678,  5.79331844],
+                 [ 1.13140211,  9.53156118,  7.22336862],
+                 [-2.30258509,  7.09431783,  5.79939564],
+                 [ 0.09531018,  7.50444662,  5.82037962],
+                 [ 0.09531018,  7.8184705,   5.82334171],
+                 [ 0.09531018,  7.25212482,  5.91106761]])
+model = MAOF()
+model.fit(data)
+scores = model.decision_scores_
+print(scores)
+```
+**Output**
+```
+[0.46904762 0.26202234 0.2191358  0.22355477 0.97854203 0.79770723 0.40823045 0.20513423 0.38110915 0.12616108]
+```

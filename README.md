@@ -2,23 +2,24 @@
 
 Updated by Mr. Supakit Sroynam (6534467323@student.chula.ac.th) and Krung Sinapiromsaran (krung.s@chula.ac.th)  
 Department of Mathematics and Computer Science, Faculty of Science, Chulalongkorn University  
-Version 0.2: 23 September 2024
+Version 0.2: 23 September 2024  
+Version 0.3: 9 October 2024
 
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Documents are editted. 2D and 3D examples are added.
-2. Suggest the package library before importing.
-3. The package operates on fixed datasets containing fewer than 1000 data points.
+1. Implementing MAOF() from the paper "Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor in 2024.
+2. Documents are editted with more examples.
+3. Suggest the package library before importing.
+4. The package operates on fixed datasets containing fewer than 1000 data points.
 
 ### Introduction
 
-An outlier of a finite dataset in statistics is defined as a data point that differs significantly from others. It is normally surrounded by a few data points
-while normal ones are engulfed by others. This behavior leads to the proposed outlier factor called Mass-ratio-variance based Outlier Factor (MOF). A score is assigned to a data point from the variance of the mass-ratio distribution from the rest of data points. Within a sphere of an outlier, there will be few data points compared with a normal one. So, the mass-ratio of an outlier will be different from that of a normal data point. The algorithm to generate MOF requires no parameter and embraces the density concept. 
+An outlier in a finite dataset is a data point that stands out from the rest. It is often isolaed, unliked normal data points, which tend to cluster together. To identify outliers, the Mass-ratio-variance based Outlier Factor (MOF) was developed and implemented. MOF works by calculating a score of each data point based on the density of itself with respect to other data points. Outliers always have fewer nearby data points so their mass-ratio (a density ratio if the same volumes are used) will be different from normal points. This MOF algorithm does not require any extra settings. 
 
 ## Citation
 
-If you use this package in your research, please consider citing the below papers.
+If you use this package in your research, please consider citing these two papers.
 
 BibTex for the package:
 ```
@@ -111,6 +112,7 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 ### Sample usage
 ```
 # This example is from MOF paper.
+import numpy as np
 import matplotlib.pyplot as plt
 data = np.array([[0.0, 1.0], [1.0, 1.0], [2.0, 1.0], [3.0, 1.0],
                  [0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0],
@@ -149,8 +151,8 @@ plt.show()
 ### 3D sample
 ```
 # This example demonstrates  the usage of MOF
-from pymof import MOF
 import numpy as np
+from pymof import MOF
 data = np.array([[-2.30258509,  7.01040212,  5.80242044],
                  [ 0.09531018,  7.13894636,  5.91106761],
                  [ 0.09531018,  7.61928251,  5.80242044],
@@ -210,8 +212,8 @@ dispersion beyond the traditional variance such as range, interquartile range, a
 ### Sample usage
 ```
 # This example demonstrates  the usage of MAOF
-from pymof import MAOF
 import numpy as np
+from pymof import MAOF
 data = np.array([[-2.30258509,  7.01040212,  5.80242044],
                  [ 0.09531018,  7.13894636,  5.91106761],
                  [ 0.09531018,  7.61928251,  5.80242044],

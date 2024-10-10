@@ -8,10 +8,9 @@ Version 0.3: 9 October 2024
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Implementing MAOF() from the paper "Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor in 2024.
-2. Documents are editted with more examples.
-3. Suggest the package library before importing.
-4. The package operates on fixed datasets containing fewer than 1000 data points.
+1. Reimplement MOF() to handle datasize about 10,000 data points.
+2. Implementing MAOF() from the paper "Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor in 2024.
+3. Documents are editted with more examples.
 
 ### Introduction
 

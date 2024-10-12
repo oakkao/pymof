@@ -176,8 +176,9 @@ model.visualize()
 
 ------
 ### Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor (MAOF)
-This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical  
-dispersion beyond the traditional variance such as range, interquartile range, and average absolute deviation.
+Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor for Anomaly Scoring (MAOF)
+This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical dispersion beyond the traditional variance such as range, interquartile range, average absolute deviation, and combination of previous two dispersions.
+  
 #### MAOF() 
 > Initialize a model object `MAOF`
 
@@ -185,19 +186,24 @@ dispersion beyond the traditional variance such as range, interquartile range, a
     Return :
             self : object
                     object of MAOF model
-#### MAOF.fit(Data, Window = 10000, Function_name = "AAD")
+#### MAOF.fit(Data, Window = 10000, Function_name = "AAD", Weight_Lambda = 0.5)
 > Fit data to  `MAOF` model
 
     Parameters :
             Data  : numpy array of shape (n_points, d_dimensions)
                     The input samples.
-            Window  : integer (int)
+            Window  : int
                     number of points for each calculation.
                     default window size is 10000.
-            Function_name  : string (str)
+            Function_name : string
                     A type of statistical dispersion that use for scoring.
-                    Function_name can be 'AAD','IQR', 'Range'.
+                    Function_name can be 'AAD','IQR', 'Range','Weight'.
                     default function is 'AAD'
+            Weight_Lambda : float
+                    0.0 <= Weight_Lambda <= 1.0
+                    A Value of lambda that use in weight-scoring function.
+                    score = λ AAD + (1- λ) IQR
+                    default weight is 0.5
     Return :
             self  : object
                     fitted estimator
@@ -211,8 +217,8 @@ dispersion beyond the traditional variance such as range, interquartile range, a
 ### Sample usage
 ```
 # This example demonstrates  the usage of MAOF
-import numpy as np
 from pymof import MAOF
+import numpy as np
 data = np.array([[-2.30258509,  7.01040212,  5.80242044],
                  [ 0.09531018,  7.13894636,  5.91106761],
                  [ 0.09531018,  7.61928251,  5.80242044],
@@ -231,4 +237,76 @@ print(scores)
 **Output**
 ```
 [0.46904762 0.26202234 0.2191358  0.22355477 0.97854203 0.79770723 0.40823045 0.20513423 0.38110915 0.12616108]
+```
+------
+### Windowing mass-ratio-variance based outlier factor (SMOF)
+This algorithm is an extension of the mass-ratio-variance outlier factor algorithm (MOF). WMOF operates on overlapping windows of fixed size, specified by the user. The use of overlapping windows ensures that anomalies occurring at window boundaries are not missed. For each window, the MOF score is computed for all data points within the window.
+#### SMOF() 
+> Initialize a model object `SMOF`
+
+    Parameters :
+    Return :
+            self : object
+                    object of SMOF model
+#### SMOF.fit(Data, Window = 1000, Overlap_ratio = 0.2)
+> Fit data to  `SMOF` model
+
+    Parameters :
+            Data : numpy array of shape (n_samples, n_features)
+                The input samples.
+            Window : integer (int)
+                number of points for each calculation
+                default window size is 1000.
+            Overlap_ratio : float
+                0.0 <= Overlap_ratio <= 0.5
+                A Overlap_ratio between window frame.
+                default ratio is 0.2
+    Return :
+            self  : object
+                    fitted estimator
+
+#### SMOF.detectAnomaly(theshold)
+> Detect data points that have `SMOF` score greater than theshold value
+
+    Parameters :
+            theshold : float
+                A theshold value for detect anomaly points
+    Return :
+            idx : numpy array of shape (n_samples,)
+                An index array of anomaly ponts in data
+
+#### SMOF attributes
+| Attributes | Type | Details |
+| ------ | ------- | ------ |
+| MAOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
+| MAOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
+| MAOF.Anomaly | numpy array | index of anomaly points in data|
+
+### Sample usage
+```
+# This example demonstrates  the usage of MAOF
+from pymof import SMOF
+import numpy as np
+data = np.array([[-2.30258509,  7.01040212,  5.80242044],
+                 [ 0.09531018,  7.13894636,  5.91106761],
+                 [ 0.09531018,  7.61928251,  5.80242044],
+                 [ 0.09531018,  7.29580291,  6.01640103],
+                 [-2.30258509, 12.43197678,  5.79331844],
+                 [ 1.13140211,  9.53156118,  7.22336862],
+                 [-2.30258509,  7.09431783,  5.79939564],
+                 [ 0.09531018,  7.50444662,  5.82037962],
+                 [ 0.09531018,  7.8184705,   5.82334171],
+                 [ 0.09531018,  7.25212482,  5.91106761]])
+model = SMOF()
+model.fit(data)
+scores = model.decision_scores_
+print(scores)
+
+anomaly = model.detectAnomaly(0.8)
+print(anomaly)
+```
+**Output**
+```
+[0.34541068 0.11101711 0.07193073 0.07520904 1.51480377 0.94558894 0.27585581 0.06242823 0.2204504  0.02247725]
+[4 5]
 ```

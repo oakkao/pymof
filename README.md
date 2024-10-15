@@ -9,7 +9,7 @@ version 0.4: 12 October 2024
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Implementing a new class SMOF() for streaming data.
+1. Implementing a new class WMOF() for streaming data.
 2. Documents are editted with more examples.
 
 ### Introduction

@@ -4,13 +4,13 @@ Updated by Mr. Supakit Sroynam (6534467323@student.chula.ac.th) and Krung Sinapi
 Department of Mathematics and Computer Science, Faculty of Science, Chulalongkorn University  
 Version 0.2: 23 September 2024  
 Version 0.3: 9 October 2024
+version 0.4: 12 October 2024
 
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Reimplement MOF() to handle datasize about 10,000 data points.
-2. Implementing MAOF() from the paper "Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor in 2024.
-3. Documents are editted with more examples.
+1. Implementing a new class SMOF() for streaming data.
+2. Documents are editted with more examples.
 
 ### Introduction
 
@@ -239,17 +239,17 @@ print(scores)
 [0.46904762 0.26202234 0.2191358  0.22355477 0.97854203 0.79770723 0.40823045 0.20513423 0.38110915 0.12616108]
 ```
 ------
-### Windowing mass-ratio-variance based outlier factor (SMOF)
+### Windowing mass-ratio-variance based outlier factor (WMOF)
 This algorithm is an extension of the mass-ratio-variance outlier factor algorithm (MOF). WMOF operates on overlapping windows of fixed size, specified by the user. The use of overlapping windows ensures that anomalies occurring at window boundaries are not missed. For each window, the MOF score is computed for all data points within the window.
-#### SMOF() 
-> Initialize a model object `SMOF`
+#### WMOF() 
+> Initialize a model object `WMOF`
 
     Parameters :
     Return :
             self : object
-                    object of SMOF model
+                    object of WMOF model
 #### SMOF.fit(Data, Window = 1000, Overlap_ratio = 0.2)
-> Fit data to  `SMOF` model
+> Fit data to  `WMOF` model
 
     Parameters :
             Data : numpy array of shape (n_samples, n_features)
@@ -265,8 +265,8 @@ This algorithm is an extension of the mass-ratio-variance outlier factor algorit
             self  : object
                     fitted estimator
 
-#### SMOF.detectAnomaly(theshold)
-> Detect data points that have `SMOF` score greater than theshold value
+#### WMOF.detectAnomaly(theshold)
+> Detect data points that have `WMOF` score greater than theshold value
 
     Parameters :
             theshold : float
@@ -275,17 +275,17 @@ This algorithm is an extension of the mass-ratio-variance outlier factor algorit
             idx : numpy array of shape (n_samples,)
                 An index array of anomaly ponts in data
 
-#### SMOF attributes
+#### WMOF attributes
 | Attributes | Type | Details |
 | ------ | ------- | ------ |
-| MAOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
-| MAOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
-| MAOF.Anomaly | numpy array | index of anomaly points in data|
+| WMOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
+| WMOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
+| WMOF.Anomaly | numpy array | index of anomaly points in data|
 
 ### Sample usage
 ```
-# This example demonstrates  the usage of MAOF
-from pymof import SMOF
+# This example demonstrates  the usage of WMOF
+from pymof import WMOF
 import numpy as np
 data = np.array([[-2.30258509,  7.01040212,  5.80242044],
                  [ 0.09531018,  7.13894636,  5.91106761],
@@ -297,7 +297,7 @@ data = np.array([[-2.30258509,  7.01040212,  5.80242044],
                  [ 0.09531018,  7.50444662,  5.82037962],
                  [ 0.09531018,  7.8184705,   5.82334171],
                  [ 0.09531018,  7.25212482,  5.91106761]])
-model = SMOF()
+model = WMOF()
 model.fit(data)
 scores = model.decision_scores_
 print(scores)

@@ -9,7 +9,7 @@ version 0.4: 12 October 2024
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Implementing a new class WMOF() for streaming data.
+1. Implementing a new class WMOF() for detecting anomaly in data stream.
 2. Documents are editted with more examples.
 
 ### Introduction
@@ -177,7 +177,7 @@ model.visualize()
 ------
 ### Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor (MAOF)
 Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor for Anomaly Scoring (MAOF)
-This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical dispersion beyond the traditional variance such as range, interquartile range, average absolute deviation, and combination of previous two dispersions.
+This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical dispersions beyond the traditional variance such as range, interquartile range (IQR), average absolute deviation (AAD), and convex combination of IQR and AAD.
   
 #### MAOF() 
 > Initialize a model object `MAOF`

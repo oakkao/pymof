@@ -3,8 +3,8 @@
 Updated by Mr. Supakit Sroynam (6534467323@student.chula.ac.th) and Krung Sinapiromsaran (krung.s@chula.ac.th)  
 Department of Mathematics and Computer Science, Faculty of Science, Chulalongkorn University  
 Version 0.2: 23 September 2024  
-Version 0.3: 9 October 2024   
-version 0.4: 12 October 2024
+Version 0.3: 9 October 2024
+Version 0.4: 12 October 2024
 
 ## Mass-ratio-variance based outlier factor
 
@@ -248,7 +248,7 @@ This algorithm is an extension of the mass-ratio-variance outlier factor algorit
     Return :
             self : object
                     object of WMOF model
-#### SMOF.fit(Data, Window = 1000, Overlap_ratio = 0.2)
+#### WMOF.fit(Data, Window = 1000, Overlap_ratio = 0.2)
 > Fit data to  `WMOF` model
 
     Parameters :

@@ -5,6 +5,7 @@ from scipy.stats import rankdata
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
+from .MOF import _point_in_radius
 
 ## Scoring function for MAOF
 #AAD
@@ -40,41 +41,33 @@ def _Massratio(Data,window, funcName, weightLambda):
     for start_point in range(0,n,window):
       stop_point = min(start_point+ window, n)
       Current_Data = Data[start_point : stop_point]
-      with objmode(current_idx = "i8[:, :]"):
-        window_dm = cdist(Current_Data, Data)
-        current_idx = np.argsort(np.argsort(window_dm))
+      win_size = stop_point - start_point
 
-      count = np.zeros(window, dtype=np.int32)
-      mass = np.zeros((window, n-1))
+      with objmode(window_dm = "i8[:, :]", sort_idx = "i8[:, :]"):
+        window_dm = cdist(Current_Data, Data)
+        sort_idx = np.argsort(window_dm)
+
+      # when pairwise distance is same, the index is also same
+      current_idx = _point_in_radius(window_dm, sort_idx, win_size, n)
+
+      count = np.zeros(win_size, dtype=np.int32)
+      mass = np.zeros((win_size, n-1))
 
       # calculate all current points
-      for i in range(start_point, stop_point):
-        for j in range(i+1, stop_point):
-          m = (current_idx[j%window][i]*1.0 + 1)/ (current_idx[i%window][j] + 1)
-          mass[i,count[i]] = m
-          count[i] += 1
-          mass[j,count[j]] = 1/m
-          count[j] += 1
-
-      # calculate 0 -> start_points
-      for i in range(start_point):
-        with objmode(idx = "i8[:, :]"):
+      for i in range(n):
+        with objmode(dm = "i8[:, :]", remain_idx = "i8[:, :]"):
           dm = cdist([Data[i]], Data)
-          idx = np.argsort(np.argsort(dm))
-        for j in range(start_point, stop_point):
-          m = (current_idx[j%window][i]*1.0 + 1 )/ (idx[0][j%window] + 1)
-          mass[j,count[j]] = m
-          count[j] += 1
+          remain_idx = np.argsort(dm)
 
-      # calculate stop_point -> n
-      for i in range(stop_point, n):
-        with objmode(idx = "i8[:, :]"):
-          dm = cdist([Data[i]], Data)
-          idx = np.argsort(np.argsort(dm))
+        # when pairwise distance is same, the index is also same
+        idx = _point_in_radius(dm, remain_idx, 1, n)
+
         for j in range(start_point, stop_point):
-          m = (current_idx[j%window][i]*1.0 + 1 )/ (idx[0][j%window] + 1)
-          mass[j,count[j]] = m
-          count[j] += 1
+          if i == j:
+            continue
+          m = (idx[0][j] + 1.0) / (current_idx[j%window][i] + 1.0 )
+          mass[j%window,count[j%window]] = m
+          count[j%window] += 1
 
       # calculate scores
       for i in range(start_point, stop_point):

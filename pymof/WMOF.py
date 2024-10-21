@@ -6,6 +6,7 @@ from scipy.spatial.distance import cdist
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 from .MOF import _Var_Massratio
+from .MOF import _point_in_radius
 
 # Calculate windowing mass ratio
 @jit(nopython=True)

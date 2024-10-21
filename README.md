@@ -3,7 +3,7 @@
 Updated by Mr. Supakit Sroynam (6534467323@student.chula.ac.th) and Krung Sinapiromsaran (krung.s@chula.ac.th)  
 Department of Mathematics and Computer Science, Faculty of Science, Chulalongkorn University  
 Version 0.2: 23 September 2024  
-Version 0.3: 9 October 2024
+Version 0.3: 9 October 2024  
 Version 0.4: 12 October 2024
 
 ## Mass-ratio-variance based outlier factor

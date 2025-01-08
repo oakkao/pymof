@@ -5,12 +5,15 @@ Department of Mathematics and Computer Science, Faculty of Science, Chulalongkor
 Version 0.2: 23 September 2024  
 Version 0.3: 9 October 2024  
 Version 0.4: 12 October 2024
+Version 0.5: 8 January 2025
+
 
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Implementing a new class WMOF() for detecting anomaly in data stream.
-2. Documents are editted with more examples.
+1. Change the document to remove the boxplot visualization of Mass-ratio distribution.
+2. Implementing a new class WMOF() for detecting anomaly in data stream.
+3. Documents are editted with more examples.
 
 ### Introduction
 
@@ -122,29 +125,12 @@ model.fit(data)
 scores = model.decision_scores_
 print(scores)
 model.visualize()
-
-# Create a figure and axes
-fig, ax = plt.subplots()
-data = model.MassRatio
-# Iterate over each row and create a boxplot
-for i in range(data.shape[0]):
-    row = data[i, :]
-    mask = np.isnan(row)
-    ax.boxplot(row[~mask], positions=[i + 1], vert=False, widths=0.5)
-# Set labels and title
-ax.set_xlabel("MOF")
-ax.set_ylabel("Data points")
-ax.set_title("Boxplot of MassRatio distribution")
-# Show the plot
-plt.grid(True)
-plt.show()
 ```
 **Output**
 ```
 [0.12844997, 0.06254347, 0.08142683, 0.20940997, 0.03981233, 0.0212412 , 0.025438  , 0.08894882, 0.11300615, 0.0500218, 0.05805704, 0.17226989, 2.46193377]
 ```
 ![MOF score](https://github.com/oakkao/pymof/blob/main/examples/mofOriginal.png?raw=true)
-![Box plot of MassRatio distribution](https://github.com/oakkao/pymof/blob/main/examples/mofBoxplot.png?raw=true)
 
 
 ### 3D sample

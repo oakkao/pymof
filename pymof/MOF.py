@@ -23,6 +23,41 @@ def _point_in_radius(dm, sort_idx, win_size, n):
 
 # Calculate mass ratio matrix
 @jit(nopython=True)
+def _CalMassratio(Data):
+  # Beware of large numbers, it might overflow python int
+    n = len(Data)
+    win_size = n
+
+    with objmode(window_dm = "i8[:, :]", sort_idx = "i8[:, :]"):
+      window_dm = cdist(Data, Data)
+      sort_idx = np.argsort(window_dm)
+
+    # when pairwise distance is same, the index is also same
+    current_idx = _point_in_radius(window_dm, sort_idx, win_size, n)
+
+    count = np.zeros(win_size, dtype=np.int32)
+    mass = np.zeros((win_size, n-1))
+
+    # calculate all points
+    for i in range(n):
+      with objmode(dm = "i8[:, :]", remain_idx = "i8[:, :]"):
+        dm = cdist([Data[i]], Data)
+        remain_idx = np.argsort(dm)
+
+      # when pairwise distance is same, the index is also same
+      idx = _point_in_radius(dm, remain_idx, 1, n)
+
+      for j in range(n):
+        if i == j:
+          continue
+        m = (idx[0][j] + 1.0) / (current_idx[j][i] + 1.0 )
+        mass[j,count[j]] = m
+        count[j] += 1
+
+    return mass
+
+# Calculate variance mass ratio
+@jit(nopython=True)
 def _Var_Massratio(Data,window):
   # Beware of large numbers, it might overflow python int
     n = len(Data)
@@ -87,8 +122,9 @@ class MOF:
   def __init__(self):
     self.name='MOF'
     self.Data = []
+    self.MassRatio = []
 
-  def fit(self,Data, Window = 10000):
+  def fit(self,Data, Window = 10000, KeepMassRatio = True):
 
     '''
     Parameters
@@ -96,8 +132,12 @@ class MOF:
     Data : numpy array of shape (n_samples, n_features)
         The input samples.
     window : integer (int)
-        window size for calculation.
+        Window size for calculation.
         default window size is 10000.
+    KeepMassRatio : boolean
+        All points' mass ratio are kept when an argument is True. Beware for memory limitaion.
+        Can be set to False for exploding memory.
+        default KeepMassRatio size is True.
     '''
     '''
     Returns
@@ -108,7 +148,22 @@ class MOF:
     self.Data =Data
 
 # Calculate mass ratio variance (MOF)
-    self.decision_scores_= _Var_Massratio(Data,Window)
+    if KeepMassRatio:
+
+      print("Keeping mass ratio")
+      self.MassRatio = _CalMassratio(Data)
+
+      # calculate scores
+      scores = np.zeros(Data.shape[0])
+      for i in range(Data.shape[0]):
+        arr = self.MassRatio[i]
+        scores[i] = np.var(arr)
+      
+      self.decision_scores_ = scores
+
+    else:
+      # calculate scores
+      self.decision_scores_= _Var_Massratio(Data,Window)
 
 # ----------------
   def visualize(self):

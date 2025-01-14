@@ -85,7 +85,7 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
     Return :
             self : object
                     object of MOF model
-#### MOF.fit(Data, Window = 10000)
+#### MOF.fit(Data, Window = 10000, KeepMassRatio = True)
 > Fit data to  `MOF` model
 
     Parameters :
@@ -94,6 +94,10 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
             Window : integer (int)
                     window size for calculation.
                     default window size is 10000.
+            KeepMassRatio : boolean
+                    All points' mass ratio are kept when an argument is True. Beware for exploding memory.
+                    Can be set to False for memory efficient.
+                    default KeepMassRatio size is True.
     Return :
             self  : object
                     fitted estimator
@@ -110,6 +114,7 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 | ------ | ------- | ------ |
 | MOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
 | MOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
+| MOF.MassRatio | numpy array of shape (n_samples, n_samples-1) | mass ratio for each pair of points (exclude self pair) |
 
 ### Sample usage
 ```

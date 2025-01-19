@@ -5,7 +5,7 @@ from scipy.stats import rankdata
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
-from .MOF import _point_in_radius
+from .MOF import _point_in_radius, _CalMassratio
 
 ## Scoring function for MAOF
 #AAD
@@ -85,7 +85,8 @@ class MAOF:
   def __init__(self):
     self.name='MAOF'
     self.Data = []
-  def fit(self,Data,Window=10000, Function_name = "AAD", Weight_Lambda = 0.5):
+    self.MassRatio = []
+  def fit(self,Data,Window=10000, Function_name = "AAD", Weight_Lambda = 0.5, KeepMassRatio = True):
     '''
     Parameters
     ----------
@@ -103,6 +104,10 @@ class MAOF:
         A Value of lambda that use in weight-scoring function.
         score = λ AAD + (1- λ) IQR
         default weight is 0.5
+    KeepMassRatio : boolean
+        All points' mass ratio are kept when an argument is True. Beware for memory limitaion.
+        Can be set to False for exploding memory.
+        default KeepMassRatio size is True.
     '''
     '''
     Returns
@@ -122,7 +127,21 @@ class MAOF:
       assert(0.0 <= Weight_Lambda <= 1.0)
 
     # Calculate Mass-Ratio-Average-Absolute-Deviation (MAOF)
-    self.decision_scores_= _Massratio(Data,Window,funcName,Weight_Lambda)
+    if KeepMassRatio:
+
+      print("Keeping mass ratio")
+      self.MassRatio = _CalMassratio(Data)
+
+      # calculate scores
+      scores = np.zeros(Data.shape[0])
+      for i in range(Data.shape[0]):
+        arr = self.MassRatio[i]
+        scores[i] = funcName(arr,Weight_Lambda)
+      
+      self.decision_scores_ = scores
+
+    else:
+      self.decision_scores_= _Massratio(Data,Window,funcName,Weight_Lambda)
 
   def visualize(self):
     '''

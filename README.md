@@ -95,7 +95,8 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
                     window size for calculation.
                     default window size is 10000.
             KeepMassRatio : boolean
-                    All points' mass ratio are kept when an argument is True. Beware for exploding memory.
+                    All points' mass ratio are kept when an argument is True. 
+                    Beware of exploding memory since calculation with window size = n.
                     Can be set to False for memory efficient.
                     default KeepMassRatio size is True.
     Return :
@@ -119,6 +120,7 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 ### Sample usage
 ```
 # This example is from MOF paper.
+from pymof.pymof.MOF import MOF
 import numpy as np
 import matplotlib.pyplot as plt
 data = np.array([[0.0, 1.0], [1.0, 1.0], [2.0, 1.0], [3.0, 1.0],
@@ -130,12 +132,29 @@ model.fit(data)
 scores = model.decision_scores_
 print(scores)
 model.visualize()
+
+# Create a figure and axes
+fig, ax = plt.subplots()
+data = model.MassRatio
+# Iterate over each row and create a boxplot
+for i in range(data.shape[0]):
+    row = data[i, :]
+    mask = np.isnan(row)
+    ax.boxplot(row[~mask], positions=[i + 1], vert=False, widths=0.5)
+# Set labels and title
+ax.set_xlabel("MOF")
+ax.set_ylabel("Data points")
+ax.set_title("Boxplot of MassRatio distribution")
+# Show the plot
+plt.grid(True)
+plt.show()
 ```
 **Output**
 ```
 [0.12844997, 0.06254347, 0.08142683, 0.20940997, 0.03981233, 0.0212412 , 0.025438  , 0.08894882, 0.11300615, 0.0500218, 0.05805704, 0.17226989, 2.46193377]
 ```
 ![MOF score](https://github.com/oakkao/pymof/blob/main/examples/mofOriginal.png?raw=true)
+![Box plot of MassRatio distribution](https://github.com/oakkao/pymof/blob/main/examples/mofBoxplot.png?raw=true)
 
 
 ### 3D sample
@@ -177,7 +196,7 @@ This research extends the mass-ratio-variance outlier factor algorithm (MOF) by 
     Return :
             self : object
                     object of MAOF model
-#### MAOF.fit(Data, Window = 10000, Function_name = "AAD", Weight_Lambda = 0.5)
+#### MAOF.fit(Data, Window = 10000, Function_name = "AAD", Weight_Lambda = 0.5, KeepMassRatio = True)
 > Fit data to  `MAOF` model
 
     Parameters :
@@ -195,6 +214,12 @@ This research extends the mass-ratio-variance outlier factor algorithm (MOF) by 
                     A Value of lambda that use in weight-scoring function.
                     score = λ AAD + (1- λ) IQR
                     default weight is 0.5
+            KeepMassRatio : boolean
+                    All points' mass ratio are kept when an argument is True.
+                    Beware of exploding memory since calculation with window size = n.
+                    Can be set to False for memory efficient.
+                    default KeepMassRatio size is True.
+                
     Return :
             self  : object
                     fitted estimator
@@ -204,6 +229,7 @@ This research extends the mass-ratio-variance outlier factor algorithm (MOF) by 
 | ------ | ------- | ------ |
 | MAOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
 | MAOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
+| MAOF.MassRatio | numpy array of shape (n_samples, n_samples-1) | mass ratio for each pair of points (exclude self pair) 
 
 ### Sample usage
 ```

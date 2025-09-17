@@ -120,7 +120,7 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 ### Sample usage
 ```
 # This example is from MOF paper.
-from pymof.pymof.MOF import MOF
+from pymof import MOF
 import numpy as np
 import matplotlib.pyplot as plt
 data = np.array([[0.0, 1.0], [1.0, 1.0], [2.0, 1.0], [3.0, 1.0],
@@ -326,4 +326,5 @@ print(anomaly)
 ```
 [0.34541068 0.11101711 0.07193073 0.07520904 1.51480377 0.94558894 0.27585581 0.06242823 0.2204504  0.02247725]
 [4 5]
+
 ```

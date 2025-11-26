@@ -6,14 +6,14 @@ Version 0.2: 23 September 2024
 Version 0.3: 9 October 2024  
 Version 0.4: 12 October 2024  
 Version 0.5: 8 January 2025
+version 0.6: 27 November 2025
 
 
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Change the document to remove the boxplot visualization of Mass-ratio distribution.
-2. Implementing a new class WMOF() for detecting anomaly in data stream.
-3. Documents are editted with more examples.
+1. Implementing new methods in WMOF() for detecting anomaly in data stream.
+2. Documents are editted with more methods.
 
 ### Introduction
 
@@ -81,35 +81,35 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 
 > Initialize a model object `MOF`
 
-    Parameters :
-    Return :
-            self : object
-                    object of MOF model
+        Parameters :
+        Return :
+                self : object
+                        object of MOF model
 #### MOF.fit(Data, Window = 10000, KeepMassRatio = True)
 > Fit data to  `MOF` model
 
-    Parameters :
-            Data  : numpy array of shape (n_points, d_dimensions)
-                    The input samples.
-            Window : integer (int)
-                    window size for calculation.
-                    default window size is 10000.
-            KeepMassRatio : boolean
-                    All points' mass ratio are kept when an argument is True. 
-                    Beware of exploding memory since calculation with window size = n.
-                    Can be set to False for memory efficient.
-                    default KeepMassRatio size is True.
-    Return :
-            self  : object
-                    fitted estimator
+        Parameters :
+                Data  : numpy array of shape (n_points, d_dimensions)
+                        The input samples.
+                Window : integer (int)
+                        window size for calculation.
+                        default window size is 10000.
+                KeepMassRatio : boolean
+                        All points' mass ratio are kept when an argument is True. 
+                        Beware of exploding memory since calculation with window size = n.
+                        Can be set to False for memory efficient.
+                        default KeepMassRatio size is True.
+        Return :
+                self  : object
+                        fitted estimator
 #### MOF.visualize()
 > Visualize data points with `MOF`'s scores\
 > **Note** cannot visualize data points having a dimension greather than 3
 
-    Parameters :
-    Return :
-        decision_scores_ : numpy array of shape (n_samples)
-                                    decision score for each point
+        Parameters :
+        Return :
+                decision_scores_ : numpy array of shape (n_samples)
+                        decision score for each point
 #### MOF attributes
 | Attributes | Type | Details |
 | ------ | ------- | ------ |
@@ -192,37 +192,37 @@ This research extends the mass-ratio-variance outlier factor algorithm (MOF) by 
 #### MAOF() 
 > Initialize a model object `MAOF`
 
-    Parameters :
-    Return :
-            self : object
-                    object of MAOF model
+        Parameters :
+        Return :
+                self : object
+                        object of MAOF model
 #### MAOF.fit(Data, Window = 10000, Function_name = "AAD", Weight_Lambda = 0.5, KeepMassRatio = True)
 > Fit data to  `MAOF` model
 
-    Parameters :
-            Data  : numpy array of shape (n_points, d_dimensions)
-                    The input samples.
-            Window  : int
-                    number of points for each calculation.
-                    default window size is 10000.
-            Function_name : string
-                    A type of statistical dispersion that use for scoring.
-                    Function_name can be 'AAD','IQR', 'Range','Weight'.
-                    default function is 'AAD'
-            Weight_Lambda : float
-                    0.0 <= Weight_Lambda <= 1.0
-                    A Value of lambda that use in weight-scoring function.
-                    score = λ AAD + (1- λ) IQR
-                    default weight is 0.5
-            KeepMassRatio : boolean
-                    All points' mass ratio are kept when an argument is True.
-                    Beware of exploding memory since calculation with window size = n.
-                    Can be set to False for memory efficient.
-                    default KeepMassRatio size is True.
+        Parameters :
+                Data  : numpy array of shape (n_points, d_dimensions)
+                        The input samples.
+                Window  : int
+                        number of points for each calculation.
+                        default window size is 10000.
+                Function_name : string
+                        A type of statistical dispersion that use for scoring.
+                        Function_name can be 'AAD','IQR', 'Range','Weight'.
+                        default function is 'AAD'
+                Weight_Lambda : float
+                        0.0 <= Weight_Lambda <= 1.0
+                        A Value of lambda that use in weight-scoring function.
+                        score = λ AAD + (1- λ) IQR
+                        default weight is 0.5
+                KeepMassRatio : boolean
+                        All points' mass ratio are kept when an argument is True.
+                        Beware of exploding memory since calculation with window size = n.
+                        Can be set to False for memory efficient.
+                        default KeepMassRatio size is True.
                 
-    Return :
-            self  : object
-                    fitted estimator
+        Return :
+                self  : object
+                        fitted estimator
 
 #### MAOF attributes
 | Attributes | Type | Details |
@@ -258,50 +258,90 @@ print(scores)
 ------
 ### Windowing mass-ratio-variance based outlier factor (WMOF)
 This algorithm is an extension of the mass-ratio-variance outlier factor algorithm (MOF). WMOF operates on overlapping windows of fixed size, specified by the user. The use of overlapping windows ensures that anomalies occurring at window boundaries are not missed. For each window, the MOF score is computed for all data points within the window.
-#### WMOF() 
-> Initialize a model object `WMOF`
+#### WMOF(window=1000, overlap_ratio=0.2) 
+> Initialize a `WMOF` model object 
 
-    Parameters :
-    Return :
-            self : object
-                    object of WMOF model
-#### WMOF.fit(Data, Window = 1000, Overlap_ratio = 0.2)
-> Fit data to  `WMOF` model
+        Parameters :
+                window : integer (int)
+                        The number of points for each calculation
+                        default window size is 1000.
+                overlap_ratio : float
+                        0.0 <= overlap_ratio <= 0.5
+                        The overlap ratio between window frames.
+                        default ratio is 0.2
+        Return :
+                self : object
+                        object of WMOF model
 
-    Parameters :
-            Data : numpy array of shape (n_samples, n_features)
-                The input samples.
-            Window : integer (int)
-                number of points for each calculation
-                default window size is 1000.
-            Overlap_ratio : float
-                0.0 <= Overlap_ratio <= 0.5
-                A Overlap_ratio between window frame.
-                default ratio is 0.2
-    Return :
-            self  : object
-                    fitted estimator
+#### WMOF.fit(data)
+> Fit data to the `WMOF` model
+
+        Parameters :
+                data : numpy array of shape (n_samples, n_features)
+                        The input samples.
+        Return :
+                self  : object
+                        fitted estimator
+
+#### WMOF.fit_score(x)
+> Fit a data point to the `WMOF` model for streaming data
+
+        Parameters :
+                x : numpy array of shape (1, n_features)
+                        A new input data point.
+        Return :
+                score : numpy array of shape ((1 - overlap_ratio) * window)
+                        A batch of decision scores for the current window.
+
+#### WMOF.fit_last_score()
+> Fit the remaining data points in the `WMOF` model for streaming data
+
+        Parameters :
+        Return :
+                score : numpy array of shape ((1 - overlap_ratio) * window,)
+                        decision scores for the remaining points in the last window.
 
 #### WMOF.detectAnomaly(theshold)
-> Detect data points that have `WMOF` score greater than theshold value
+> Detect data points that have `WMOF` scores greater than a threshold value
 
-    Parameters :
-            theshold : float
-                A theshold value for detect anomaly points
-    Return :
-            idx : numpy array of shape (n_samples,)
-                An index array of anomaly ponts in data
+        Parameters :
+                threshold : float
+                        A threshold value for detecting anomaly points
+        Return :
+                idx : numpy array of shape (n_samples,)
+                        An index array of anomaly points in data
+
+#### WMOF.detectStream(scores, tau = None, n = 0.01)
+> Detect anomaly data points for streaming data
+
+        Parameters :
+                scores : numpy array of shape (n_samples,)
+                        decision scores for the current window.
+                tau : float
+                        A threshold value for detecting anomaly points.
+                        default tau is None, the threshold is determined by 'n'.
+                n : float or int
+                        If float (0.01 <= n <= 0.49), it is the percentage of anomaly data points
+                        to select (e.g., 0.01 means the top 1% of scores).
+                        If int, it is the exact number of anomaly data points to select.
+                        default n is 0.01
+        Return :
+                idx : numpy array of shape (n_samples,)
+                        An index array of anomaly points in the current window of data.
 
 #### WMOF attributes
 | Attributes | Type | Details |
 | ------ | ------- | ------ |
-| WMOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
-| WMOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
-| WMOF.Anomaly | numpy array | index of anomaly points in data|
+| WMOF.data | numpy array | input data for scoring |
+| WMOF.window_size | integer | number of points for each calculation |
+| WMOF.overlap_ratio | float | overlap ratio between window frame |
+| WMOF.decision_scores_ | numpy array | decision score for each point |
+| WMOF.anomaly | numpy array | index of anomaly points in data|
 
 ### Sample usage
+The first example
 ```
-# This example demonstrates  the usage of WMOF
+# This example demonstrates the usage of WMOF
 from pymof import WMOF
 import numpy as np
 data = np.array([[-2.30258509,  7.01040212,  5.80242044],
@@ -326,5 +366,45 @@ print(anomaly)
 ```
 [0.34541068 0.11101711 0.07193073 0.07520904 1.51480377 0.94558894 0.27585581 0.06242823 0.2204504  0.02247725]
 [4 5]
+```
+The second example
+```
+# This example demonstrates the usage of WMOF for streaming data
+from pymof import WMOF
+import numpy as np
+
+data = np.array([[-2.30258509,  7.01040212,  5.80242044],
+                 [ 0.09531018,  7.13894636,  5.91106761],
+                 [ 0.09531018,  7.61928251,  5.80242044],
+                 [ 0.09531018,  7.29580291,  6.01640103],
+                 [-2.30258509, 12.43197678,  5.79331844],
+                 [ 1.13140211,  9.53156118,  7.22336862],
+                 [-2.30258509,  7.09431783,  5.79939564],
+                 [ 0.09531018,  7.50444662,  5.82037962],
+                 [ 0.09531018,  7.81847505,   5.82334171],
+                 [ 1.35486018,  2.96845045,   0.13642751],
+                 [ 2.96845054,  1.35486018,   5.82334171],
+                 [ 0.09531018,  7.25212482,  5.91106761]])
+model = WMOF(window=6)
+scores = np.array([])
+
+for i in data:
+    new_scores = model.fit_score(i)
+    scores = np.append(scores, new_scores)
+
+    if len(new_scores) != 0:
+        anomaly = model.detectStream(new_scores, n=0.25)
+        print(anomaly)
+
+new_scores = model.fit_last_score()
+scores = np.append(scores, new_scores)
+print(scores)
+```
+**Output**
+```
+[4]
+[0]
+[0.20444444 0.0384     0.1576     0.01937778 0.5104     0.1496
+ 0.09884444 0.06111111 0.02871111 0.02469136 0.01388889 0.01388889]
 
 ```

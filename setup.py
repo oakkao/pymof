@@ -3,7 +3,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read() 
 setup(
     name = 'pymof',
-    version = "0.7.0",
+    version = "0.7.1",
     description = "Mass ratio variance-based outlier factor (MOF)",
     long_description=long_description, 
     long_description_content_type="text/markdown",

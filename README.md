@@ -13,7 +13,7 @@ Version 0.7: 12 December 2025
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Implementing HVOF() for detecting anomaly in data stream.
+1. Implementing HVOF() for anomaly detection.
 2. Documents are editted with more methods.
 3. A Table of Contents is added.
 

@@ -2,18 +2,20 @@
 
 Updated by Mr. Supakit Sroynam (6534467323@student.chula.ac.th) and Krung Sinapiromsaran (krung.s@chula.ac.th)  
 Department of Mathematics and Computer Science, Faculty of Science, Chulalongkorn University  
-Version 0.2: 23 September 2024  
-Version 0.3: 9 October 2024  
-Version 0.4: 12 October 2024  
-Version 0.5: 8 January 2025
-version 0.6: 27 November 2025
+Version 0.2: 23 September 2024 \
+Version 0.3: 9 October 2024 \
+Version 0.4: 12 October 2024 \
+Version 0.5: 8 January 2025 \
+Version 0.6: 27 November 2025 \
+Version 0.7: 12 December 2025 
 
 
 ## Mass-ratio-variance based outlier factor
 
 ### Latest news
-1. Implementing new methods in WMOF() for detecting anomaly in data stream.
+1. Implementing HVOF() for detecting anomaly in data stream.
 2. Documents are editted with more methods.
+3. A Table of Contents is added.
 
 ### Introduction
 
@@ -72,9 +74,13 @@ sys.path.append('/path/to/lib/python3.xx/site-packages')
 
 
 ## Documentation
-----
+### Table of Contents
+1. [Mass-ratio-variance based Outlier Factor (MOF)](#MOF)
+2. [Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor (MAOF)](#MAOF)
+3. [Windowing mass-ratio-variance based outlier factor (WMOF)](#WMOF)
+4. [Hypervolume-ratio-variance Outlier Factor (HVOF)](#HVOF)
 
-### Mass-ratio-variance based Outlier Factor (MOF)
+### Mass-ratio-variance based Outlier Factor (MOF) <a name="MOF"></a>
 The outlier score of each data point is calculated using the Mass-ratio-variance based Outlier Factor (MOF). MOF quantifies the global deviation of a data point's density relative to the rest of the dataset. This global perspective is crucial because an outlier's score depends on its overall isolation from all other data points. By analyzing the variance of the mass ratio, MOF can effectively identify data points with significantly lower density compared to their neighbors, indicating their outlier status.
 
 #### MOF() 
@@ -117,7 +123,7 @@ The outlier score of each data point is calculated using the Mass-ratio-variance
 | MOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
 | MOF.MassRatio | numpy array of shape (n_samples, n_samples-1) | mass ratio for each pair of points (exclude self pair) |
 
-### Sample usage
+#### Sample usage
 ```
 # This example is from MOF paper.
 from pymof import MOF
@@ -157,7 +163,7 @@ plt.show()
 ![Box plot of MassRatio distribution](https://github.com/oakkao/pymof/blob/main/examples/mofBoxplot.png?raw=true)
 
 
-### 3D sample
+##### 3D sample
 ```
 # This example demonstrates  the usage of MOF
 import numpy as np
@@ -185,7 +191,7 @@ model.visualize()
 ![](https://github.com/oakkao/pymof/blob/main/examples/example.png?raw=true)
 
 ------
-### Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor (MAOF)
+### Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor (MAOF) <a name="MAOF"></a>
 Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor for Anomaly Scoring (MAOF)
 This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical dispersions beyond the traditional variance such as range, interquartile range (IQR), average absolute deviation (AAD), and convex combination of IQR and AAD.
   
@@ -231,7 +237,7 @@ This research extends the mass-ratio-variance outlier factor algorithm (MOF) by 
 | MAOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
 | MAOF.MassRatio | numpy array of shape (n_samples, n_samples-1) | mass ratio for each pair of points (exclude self pair) 
 
-### Sample usage
+#### Sample usage
 ```
 # This example demonstrates  the usage of MAOF
 from pymof import MAOF
@@ -256,7 +262,7 @@ print(scores)
 [0.46904762 0.26202234 0.2191358  0.22355477 0.97854203 0.79770723 0.40823045 0.20513423 0.38110915 0.12616108]
 ```
 ------
-### Windowing mass-ratio-variance based outlier factor (WMOF)
+### Windowing mass-ratio-variance based outlier factor (WMOF) <a name="WMOF"></a>
 This algorithm is an extension of the mass-ratio-variance outlier factor algorithm (MOF). WMOF operates on overlapping windows of fixed size, specified by the user. The use of overlapping windows ensures that anomalies occurring at window boundaries are not missed. For each window, the MOF score is computed for all data points within the window.
 #### WMOF(window=1000, overlap_ratio=0.2) 
 > Initialize a `WMOF` model object 
@@ -338,7 +344,7 @@ This algorithm is an extension of the mass-ratio-variance outlier factor algorit
 | WMOF.decision_scores_ | numpy array | decision score for each point |
 | WMOF.anomaly | numpy array | index of anomaly points in data|
 
-### Sample usage
+#### Sample usage
 The first example
 ```
 # This example demonstrates the usage of WMOF
@@ -408,3 +414,91 @@ print(scores)
  0.09884444 0.06111111 0.02871111 0.02469136 0.01388889 0.01388889]
 
 ```
+
+### Hypervolume-ratio-variance Outlier Factor (HVOF) <a name="HVOF"></a>
+The outlier score of each data point is calculated using the Hypervolume-ratio-variance Outlier Factor (HVOF). The hypervolume ratio of a computed data point is defined as the ratio of the hypervolume from data points within a hypersphere for a fixed mass. Here, the "mass" is defined as the number of data points within that hypersphere. By calculating the variance of these hypervolume ratios, HVOF identifies data points that deviate from the local density expectations of their neighbors.
+
+#### HVOF() 
+
+> Initialize a model object `HVOF`
+
+        Parameters :
+        Return :
+                self : object
+                        object of HVOF model
+#### HVOF.fit(Data, mass_k = 2, Window = 10000, KeepVolumeRatio = True)
+> Fit data to  `HVOF` model
+
+        Parameters :
+                Data  : numpy array of shape (n_points, d_dimensions)
+                        The input samples.
+                mass_k : integer (int)
+                        Number of nearest neighbors to consider when calculating the hypervolume (the "mass").
+                        default mass_k is 2.
+                Window : integer (int)
+                        window size for calculation when KeepVolumeRatio is False.
+                        default window size is 10000.
+                KeepVolumeRatio : boolean
+                        All points' hypervolume ratio are kept when an argument is True. 
+                        Beware of exploding memory since calculation with window size = n.
+                        Can be set to False for memory efficient.
+                        default KeepVolumeRatio is True.
+        Return :
+                self  : object
+                        fitted estimator
+#### HVOF.visualize()
+> Visualize data points with `HVOF`'s scores\
+> **Note** cannot visualize data points having a dimension greater than 3
+
+        Parameters :
+        Return :
+                decision_scores_ : numpy array of shape (n_samples)
+                        decision score for each point
+#### HVOF attributes
+| Attributes | Type | Details |
+| ------ | ------- | ------ |
+| HVOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
+| HVOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
+| HVOF.VolumeRatio | numpy array of shape (n_samples, n_samples-1) | hypervolume ratio for each pair of points (exclude self pair), only available if KeepVolumeRatio=True |
+
+#### Sample usage
+```
+from pymof import HVOF
+import numpy as np
+import matplotlib.pyplot as plt
+
+data_points = np.array([[0.0, 1.0], [1.0, 1.0], [2.0, 1.0], [3.0, 1.0],
+                 [0.0, 0.0], [1.0, -3.70], [2.0, 0.0], [3.0, 0.0],
+                 [0.0,-2.30], [1.0,-1.0], [2.0,-1.0], [3.0,-1.0],
+                  [8.0, 4.0]
+                ])
+model = HVOF()
+model.fit(data_points, mass_k = 2, KeepVolumeRatio = True)
+scores = model.decision_scores_
+print(scores)
+model.visualize()
+
+# Create a figure and axes
+fig, ax = plt.subplots()
+data = model.VolumeRatio
+# Iterate over each row and create a boxplot
+for i in range(data.shape[0]):
+    row = data[i, :]
+    mask = np.isnan(row)
+    ax.boxplot(row[~mask], positions=[i + 1], vert=False, widths=0.5)
+# Set labels and title
+ax.set_xlabel("HVOF")
+ax.set_ylabel("Data points")
+ax.set_title("Boxplot of VolumeRatio distribution")
+# Show the plot
+plt.grid(True)
+plt.show()
+```
+**Output**
+```
+[0.0658864  0.0658864  0.0658864  0.0658864  0.0658864  0.17635502
+ 0.0658864  0.0658864  0.16412078 0.06588641 0.06588641 0.06588641
+ 0.77389711]
+```
+![HVOF score](https://github.com/oakkao/pymof/blob/main/examples/hvofVisualize.png?raw=true)
+![Box plot of VolumeRatio distribution](https://github.com/oakkao/pymof/blob/main/examples/hvofBoxplot.png?raw=true)

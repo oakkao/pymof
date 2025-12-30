@@ -2,6 +2,7 @@
 
 Updated by Mr. Supakit Sroynam (6534467323@student.chula.ac.th) and Krung Sinapiromsaran (krung.s@chula.ac.th)  
 Department of Mathematics and Computer Science, Faculty of Science, Chulalongkorn University  
+
 Version 0.2: 23 September 2024 \
 Version 0.3: 9 October 2024 \
 Version 0.4: 12 October 2024 \
@@ -19,7 +20,7 @@ Version 0.7: 12 December 2025
 
 ### Introduction
 
-An outlier in a finite dataset is a data point that stands out from the rest. It is often isolaed, unliked normal data points, which tend to cluster together. To identify outliers, the Mass-ratio-variance based Outlier Factor (MOF) was developed and implemented. MOF works by calculating a score of each data point based on the density of itself with respect to other data points. Outliers always have fewer nearby data points so their mass-ratio (a density ratio if the same volumes are used) will be different from normal points. This MOF algorithm does not require any extra settings. 
+An outlier in a finite dataset is a data point that stands out from the rest. It is often isolated, unliked normal data points, which tend to cluster together. To identify outliers without user parameters, the Mass-ratio-variance based Outlier Factor (MOF) was developed and implemented. MOF works by calculating a score of each data point based on the density of itself with respect to other data points. Outliers always have fewer nearby data points so their mass-ratio (a density ratio if the same volumes are used) will be different from normal points. This MOF algorithm does not require any setting. 
 
 ## Citation
 
@@ -81,7 +82,7 @@ sys.path.append('/path/to/lib/python3.xx/site-packages')
 4. [Hypervolume-ratio-variance Outlier Factor (HVOF)](#HVOF)
 
 ### Mass-ratio-variance based Outlier Factor (MOF) <a name="MOF"></a>
-The outlier score of each data point is calculated using the Mass-ratio-variance based Outlier Factor (MOF). MOF quantifies the global deviation of a data point's density relative to the rest of the dataset. This global perspective is crucial because an outlier's score depends on its overall isolation from all other data points. By analyzing the variance of the mass ratio, MOF can effectively identify data points with significantly lower density compared to their neighbors, indicating their outlier status.
+The outlier score of each data point is calculated using the Mass-ratio-variance based Outlier Factor (MOF). MOF quantifies the global deviation of a data point's density relative to the rest from the dataset. This global perspective is crucial because an outlier's score depends on its overall isolation from all other data points. By analyzing the variance of the mass ratio, MOF can effectively identify data points with significantly lower density compared to their neighbors, indicating their outlier status.
 
 #### MOF() 
 
@@ -193,7 +194,7 @@ model.visualize()
 ------
 ### Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor (MAOF) <a name="MAOF"></a>
 Mass-Ratio-Average-Absolute-Deviation Based Outlier Factor for Anomaly Scoring (MAOF)
-This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical dispersions beyond the traditional variance such as range, interquartile range (IQR), average absolute deviation (AAD), and convex combination of IQR and AAD.
+This research extends the mass-ratio-variance outlier factor algorithm (MOF) by exploring other alternative statistical dispersions beyond the traditional variance such as range (Function_name="Range"), interquartile range (Function_name="IQR"), average absolute deviation (Function_name="AAD"), and convex combination of IQR and AAD (Function_name="Weight", Weight_Lambda=0.5).
   
 #### MAOF() 
 > Initialize a model object `MAOF`
@@ -232,10 +233,10 @@ This research extends the mass-ratio-variance outlier factor algorithm (MOF) by 
 
 #### MAOF attributes
 | Attributes | Type | Details |
-| ------ | ------- | ------ |
+| ---------- | ---- | ------- |
 | MAOF.Data | numpy array of shape (n_points, d_dimensions) | input data for scoring |
 | MAOF.decision_scores_ | numpy array of shape (n_samples) | decision score for each point |
-| MAOF.MassRatio | numpy array of shape (n_samples, n_samples-1) | mass ratio for each pair of points (exclude self pair) 
+| MAOF.MassRatio | numpy array of shape (n_samples, n_samples-1) | mass ratio for each pair of points (exclude self pair) |
 
 #### Sample usage
 ```
@@ -263,7 +264,7 @@ print(scores)
 ```
 ------
 ### Windowing mass-ratio-variance based outlier factor (WMOF) <a name="WMOF"></a>
-This algorithm is an extension of the mass-ratio-variance outlier factor algorithm (MOF). WMOF operates on overlapping windows of fixed size, specified by the user. The use of overlapping windows ensures that anomalies occurring at window boundaries are not missed. For each window, the MOF score is computed for all data points within the window.
+This algorithm is an extension of the mass-ratio-variance outlier factor algorithm (MOF) to identify anomaly in data stream. WMOF operates on overlapping windows of fixed size, specified by a user. The use of overlapping windows ensures that anomalies occurring at window boundaries are not missed. For each window, the MOF score is computed for all data points within the window.
 #### WMOF(window=1000, overlap_ratio=0.2) 
 > Initialize a `WMOF` model object 
 
@@ -416,7 +417,7 @@ print(scores)
 ```
 
 ### Hypervolume-ratio-variance Outlier Factor (HVOF) <a name="HVOF"></a>
-The outlier score of each data point is calculated using the Hypervolume-ratio-variance Outlier Factor (HVOF). The hypervolume ratio of a computed data point is defined as the ratio of the hypervolume from data points within a hypersphere for a fixed mass. Here, the "mass" is defined as the number of data points within that hypersphere. By calculating the variance of these hypervolume ratios, HVOF identifies data points that deviate from the local density expectations of their neighbors.
+The outlier score of each data point is calculated using the Hypervolume-ratio-variance Outlier Factor (HVOF). The hypervolume ratio of a computed data point is defined as the $d$-root of the ratio of the hypervolume from data points within a hypersphere for a fixed mass. Here, the "mass" is defined as the number of data points within the hypersphere. By calculating the variance of these hypervolume ratios, HVOF identifies data points that deviate from the local density expectations of their neighbors.
 
 #### HVOF() 
 
@@ -501,4 +502,5 @@ plt.show()
  0.77389711]
 ```
 ![HVOF score](https://github.com/oakkao/pymof/blob/main/examples/hvofVisualize.png?raw=true)
+
 ![Box plot of VolumeRatio distribution](https://github.com/oakkao/pymof/blob/main/examples/hvofBoxplot.png?raw=true)
